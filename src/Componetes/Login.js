@@ -12,8 +12,10 @@ const Login = () => {
     e.preventDefault();
     const success = await actions.Login({ email, password });
     if (success) {
+      setTimeout(() => {
+        navigate("/profile"); // o la ruta que sea
+      }, 100);
       alert("✅ Login exitoso");
-      navigate("/tasks");
     } else {
       alert("❌ Error en login, verifica credenciales");
     }

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Login from "./Componetes/Login";
 import Register from "./Componetes/Register";
-import TaskList from "./pages/TaskList";
+import Profile from "./pages/Profile";
 import CreateTask from "./pages/Create-Task";
 import EditTask from "./pages/EditTask";
 import PrivateRoute from "./Componetes/PrivateRoute";
@@ -18,11 +18,12 @@ function Home() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+
         <Route
-          path="/tasks"
+          path="/profile"
           element={
             <PrivateRoute>
-              <TaskList />
+              <Profile />
             </PrivateRoute>
           }
         />

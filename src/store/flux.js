@@ -40,33 +40,34 @@ const getState = ({ getStore, getActions, setStore }) => {
             {
               method: "POST",
               headers: {
-                "Content-Type": "application/json", // ✅ Corrección del error en el Content-Type
+                "Content-Type": "application/json",
               },
               body: JSON.stringify(credentials),
             }
           );
-
           if (!response.ok) {
-            throw new Error("Credenciales incorrectas"); // Manejo de errores
+            throw new Error("Credenciales incorrectas");
           }
-
           const data = await response.json();
+          // ✅ Guardar user y token
+          setStore({
+            user: { id: data.user_id, email: data.email },
+            token: data.access_token,
+            tasks: [], // Limpia tareas previas
+          });
           localStorage.setItem("token", data.access_token);
           localStorage.setItem("refresh_token", data.refresh_token);
-
-          setStore({
-            user: { username: data.username, id: data.user_id },
-            token: data.access_token,
-          });
-
           console.log("✅ Login exitoso:", data);
-          return true; // Indicar que el login fue exitoso
+          // ✅ Cargar tareas inmediatamente
+          await getActions().getTasks();
+          return true;
         } catch (error) {
-          console.error("❌ Error en el login:", error);
+          console.error("❌ Error en login:", error);
           alert("Error al iniciar sesión");
-          return false; // Indicar que el login falló
+          return false;
         }
       },
+
       refreshToken: async () => {
         try {
           const response = await fetch(
@@ -90,32 +91,57 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
       logout: () => {
-        setStore({ user: null, token: null });
-        localStorage.removeItem("token");
+        setStore({ user: null, token: null, tasks: [] });
+        localStorage.clear();
+
+        setTimeout(() => {
+          console.log("🧼 Post-logout (100ms):");
+          console.log("🧠 store.token:", getStore().token); //
+          console.log("📦 localStorage token:", localStorage.getItem("token"));
+        }, 100);
+      },
+
+      clearTasks: () => {
+        console.log("🧹 Limpiando tareas...");
+        setStore({ tasks: [] });
       },
 
       getTasks: async () => {
         const store = getStore();
-        console.log("Token actual:", store.token);
+        const token = store.token;
+        if (!token) {
+          console.warn("🚫 No hay token disponible para getTasks");
+          return;
+        }
+        console.log("🔐 Token usado en getTasks:", token);
         try {
           const response = await fetch(
             `${process.env.REACT_APP_BACKEND_URL}/tareas`,
             {
               method: "GET",
               headers: {
-                Authorization: `Bearer ${store.token}`,
+                Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
               },
             }
           );
           if (!response.ok) {
-            throw new Error("Error al cargar las tareas");
+            if (response.status === 401) {
+              console.error("❌ Token inválido o expirado. Cerrando sesión.");
+              getActions().logout();
+            } else {
+              console.error(
+                "❌ Error HTTP al obtener tareas:",
+                response.status
+              );
+            }
+            return;
           }
           const data = await response.json();
           setStore({ tasks: data });
           return data;
         } catch (error) {
-          console.error("Error al obtener tereas:", error);
+          console.error("❌ Error de red al obtener tareas:", error);
         }
       },
 

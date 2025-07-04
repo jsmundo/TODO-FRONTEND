@@ -12,7 +12,7 @@ const CreateTask = () => {
     e.preventDefault();
     const success = await actions.createTask({ title, description });
     if (success) {
-      navigate("/tasks"); // Redirigir a la lista de tareas
+      navigate("/profile"); // Redirigir a la lista de tareas
     } else {
       alert("No se pudo crear la tarea");
     }

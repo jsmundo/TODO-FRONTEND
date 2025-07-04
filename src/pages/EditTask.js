@@ -21,7 +21,7 @@ const EditTask = () => {
     e.preventDefault();
     const updated = await actions.updateTask(parseInt(taskId), form);
     if (updated) {
-      navigate("/tasks");
+      navigate("/profile");
     }
   };
 

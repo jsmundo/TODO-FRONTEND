@@ -12,17 +12,33 @@ const Navbar = () => {
   };
 
   return (
-    <nav>
-      {!store.token ? (
-        <>
-          <Link to="/register">Registro</Link> | <Link to="/login">Login</Link>
-        </>
-      ) : (
-        <>
-          <Link to="/tasks">Mis Tareas</Link> |{" "}
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      )}
+    <nav className="navbar navbar-expand-lg navbar-light bg-light px-3">
+      <div className="container-fluid">
+        <div className="d-flex">
+          {!store.token ? (
+            <>
+              <Link className="nav-link" to="/register">
+                Registro
+              </Link>
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link className="nav-link" to="/profile">
+                Mis Tareas
+              </Link>
+              <button
+                className="btn btn-outline-danger btn-sm ms-2"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          )}
+        </div>
+      </div>
     </nav>
   );
 };
