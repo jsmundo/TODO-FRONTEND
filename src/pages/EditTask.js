@@ -28,7 +28,7 @@ const EditTask = () => {
   return (
     <div className="container mt-4">
       <h2>Editar Tareas</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="task-form" onSubmit={handleSubmit}>
         <div className="mb-3">
           <label>Título</label>
           <input

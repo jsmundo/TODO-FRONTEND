@@ -21,7 +21,7 @@ const CreateTask = () => {
   return (
     <div>
       <h2>Crear Nueva Tarea</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="create-task-form" onSubmit={handleSubmit}>
         <div>
           <label>Título:</label>
           <input
