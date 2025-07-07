@@ -20,7 +20,9 @@ const ResetPassword = () => {
     const success = await actions.resetPassword(token, newPassword);
     if (success) {
       alert("✅ Contraseña cambiada exitosamente");
-      navigate("/login"); // Redirigir a la página de login
+      navigate("/login", { replace: true });
+    } else {
+      alert("❌ No se pudo cambiar la contraseña. Inténtalo de nuevo.");
     }
   };
 

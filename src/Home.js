@@ -7,6 +7,7 @@ import CreateTask from "./pages/Create-Task";
 import EditTask from "./pages/EditTask";
 import PrivateRoute from "./Componetes/PrivateRoute";
 import ResetPassword from "./pages/resetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 import Navbar from "./Componetes/Navbar";
 
 function Home() {
@@ -18,6 +19,7 @@ function Home() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route
           path="/profile"

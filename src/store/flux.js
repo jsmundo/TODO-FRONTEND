@@ -262,24 +262,48 @@ const getState = ({ getStore, getActions, setStore }) => {
       resetPassword: async (token, newPassword) => {
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_BACKEND_URL}/reset-password/${token}`,
+            `${
+              process.env.REACT_APP_BACKEND_URL
+            }/reset-password/${encodeURIComponent(token)}`,
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ newPassword: newPassword }),
+              body: JSON.stringify({ new_password: newPassword }),
             }
           );
           if (!response.ok) {
-            throw new Error("Error al cambiar la contraseña");
+            const { message } = await response
+              .json()
+              .catch(() => ({ message: "Error desconocido" }));
+            throw new Error(message || `Error ${response.status}`);
           }
-          const data = await response.json();
-          console.log("✅ Contraseña cambiada exitosamente:", data);
+          //  const data = await response.json();
+          console.log("✅ Contraseña cambiada exitosamente");
           return true;
         } catch (error) {
           console.error("Error en reset password:", error);
-          alert("Error al cambiar la contraseña");
+          return false;
+        }
+      },
+      sendResetEmail: async (email) => {
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/forgot-password`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email }),
+            }
+          );
+          if (!response.ok) throw new Error(`Error ${response.status}`);
+          return true;
+        } catch (error) {
+          console.error("Error al enviar correo de restablecimiento:", error);
+          alert("Error al enviar el correo de restablecimiento");
           return false;
         }
       },
