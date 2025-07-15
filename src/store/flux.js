@@ -1,6 +1,8 @@
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
+      laernBatch: [],
+      learnIndex: 0,
       tasks: [],
       user: null,
       token: localStorage.getItem("token") || null,
@@ -256,6 +258,51 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error("Error en deletetask:", error);
           return false;
+        }
+      },
+      getSentencesBatch: async (limit = 20) => {
+        const token = localStorage.getItem("token");
+        try {
+          const response = await fetch(
+            `http://localhost:5000/api/learn/next-batch?limit=${limit}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (!response.ok)
+            throw new Error("Error al obtener el lote de frases");
+          const data = await response.json();
+          console.log("✅ Datos recibidos:", data);
+          setStore({
+            learnBatch: data,
+            learnIndex: 0,
+          });
+        } catch (error) {
+          console.error("❌ Error en getSentencesBatch:", error);
+        }
+      },
+
+      sendAnswer: async (flashcardId, quality) => {
+        const token = localStorage.getItem("token");
+        try {
+          const response = await fetch(
+            "http://localhost:5000/api/learn/answer",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ flashcardId, quality }),
+            }
+          );
+          if (!response.ok) throw new Error("Error al enviar la respuesta");
+          const { learnIndex } = getStore();
+          setStore({ learnIndex: learnIndex + 1 });
+        } catch (error) {
+          console.error("❌ Error en sendAnswer:", error);
         }
       },
 

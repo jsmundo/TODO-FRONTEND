@@ -30,6 +30,9 @@ const Profile = () => {
   const handleCreate = () => {
     navigate("/crear-tarea");
   };
+  const handleLearn = () => {
+    navigate("/learn");
+  };
 
   const handleUpdateTask = (taskId) => {
     navigate(`/editar-tareas/${taskId}`);
@@ -54,6 +57,9 @@ const Profile = () => {
 
       <button onClick={handleCreate} className="btn btn-primary my-3">
         Crear nueva tarea
+      </button>
+      <button onClick={handleLearn} className="btn btn-primary my-3">
+        Aprender frases
       </button>
 
       {store.tasks.length === 0 ? (
