@@ -9,6 +9,7 @@ import PrivateRoute from "./Componetes/PrivateRoute";
 import ResetPassword from "./pages/resetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Navbar from "./Componetes/Navbar";
+import Learn from "./pages/Learn";
 
 function Home() {
   return (
@@ -42,6 +43,14 @@ function Home() {
           element={
             <PrivateRoute>
               <EditTask />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/learn"
+          element={
+            <PrivateRoute>
+              <Learn />
             </PrivateRoute>
           }
         />
